@@ -1,0 +1,86 @@
+{
+  "name": "overview",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/overview/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/overview",
+        "index": "apps/overview/src/index.html",
+        "baseHref": "/",
+        "main": "apps/overview/src/main.tsx",
+        "tsConfig": "apps/overview/tsconfig.app.json",
+        "assets": ["apps/overview/src/favicon.ico", "apps/overview/src/assets"],
+        "styles": ["apps/overview/src/styles.scss"],
+        "scripts": [],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/overview/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/overview/src/environments/environment.ts",
+              "with": "apps/overview/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "overview:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "overview:build:development"
+        },
+        "production": {
+          "buildTarget": "overview:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/overview/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "overview:build"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/overview/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
